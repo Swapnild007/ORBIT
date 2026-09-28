@@ -1,7 +1,14 @@
-import { defineConfig, globalIgnores } from 'eslint/config';
-import nextVitals from 'eslint-config-next/core-web-vitals.js';
+import { FlatCompat } from '@eslint/eslintrc';
+import js from '@eslint/js';
 
-export default defineConfig([
-  ...nextVitals,
-  globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts']),
-]);
+const compat = new FlatCompat({
+  baseDirectory: import.meta.dirname,
+  recommendedConfig: js.configs.recommended,
+});
+
+export default [
+  ...compat.config({ extends: ['next/core-web-vitals'] }),
+  {
+    ignores: ['.next/**', 'out/**', 'build/**', 'next-env.d.ts'],
+  },
+];
