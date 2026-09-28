@@ -121,3 +121,14 @@ Repository: https://github.com/mekhontsev/magicdesk
 ## Source and reuse note
 
 This is a design and architecture study, not a code port. Use the repositories as references for concepts and interaction patterns. Before reusing code, assets, or substantial implementation, review that specific repository's license, attribution requirements, dependencies, and compatibility; preserve upstream authorship and notices.
+
+## Native implementation spot-check
+
+The repository review also inspected the native app manifests and source-tree entry points, not only marketing pages:
+
+- Smart Dock's manifest declares a normal launcher activity and a separate `LauncherActivity` handling Android `ACTION_MAIN` with `CATEGORY_HOME`. It also declares dock/accessibility and notification-listener services and a Shizuku provider. Its manifest includes special permissions such as overlay, usage access, secure settings, and package visibility. This confirms that some desktop/launcher functions rely on native Android components and permissions, not browser UI alone.
+- MagicDesk's manifest declares Android foreground-service and notification permissions, package queries for supported integrations, and an accessibility service. Its README further distinguishes base app use from features requiring elevated service access.
+- The Smart Dock and MagicDesk source trees include Android manifests, AIDL, Java source, and Android resources. They are native Android projects, unlike ORBIT's Next.js static web app.
+- Boringdroid's architecture notes describe a SystemUI plugin and AOSP runtime resource overlays, confirming that deeper system UI changes require an Android platform build and are not simply a web frontend feature.
+
+This was an architecture-level review and targeted manifest/source-structure inspection, not a line-by-line audit of every upstream file. The next technical research pass should inspect specific app-launch, permission-request, and task-switching implementations before any native code is adapted.
