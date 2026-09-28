@@ -19,7 +19,7 @@ export default function manifest(): MetadataRoute.Manifest {
         src: '/ORBIT/orbit-icon.svg',
         sizes: 'any',
         type: 'image/svg+xml',
-        purpose: 'any maskable',
+        purpose: 'any',
       },
     ],
   };
