@@ -2,67 +2,74 @@
 
 import { useMemo, useState } from 'react';
 
-type Section = 'Home' | 'Assistant' | 'Projects' | 'Memory' | 'Library' | 'Settings';
-type Task = { id: number; title: string; meta: string; done: boolean };
-const nav: { name: Section; icon: string }[] = [
-  { name: 'Home', icon: '⌂' }, { name: 'Assistant', icon: '✳' }, { name: 'Projects', icon: '▦' },
-  { name: 'Memory', icon: '◷' }, { name: 'Library', icon: '▤' }, { name: 'Settings', icon: '⚙' },
+type AppId = 'files' | 'orbit-ai' | 'projects' | 'notes' | 'calendar' | 'settings';
+type OrbitApp = { id: AppId; name: string; glyph: string; tint: string; subtitle: string };
+const apps: OrbitApp[] = [
+  { id: 'files', name: 'Files', glyph: '▤', tint: 'sky', subtitle: 'Browse your workspace' },
+  { id: 'orbit-ai', name: 'ORBIT AI', glyph: '✳', tint: 'violet', subtitle: 'Your personal assistant' },
+  { id: 'projects', name: 'Projects', glyph: '▦', tint: 'blue', subtitle: 'Workspaces and activity' },
+  { id: 'notes', name: 'Notes', glyph: '▧', tint: 'yellow', subtitle: 'Quick thoughts and drafts' },
+  { id: 'calendar', name: 'Calendar', glyph: '▦', tint: 'green', subtitle: 'Your upcoming schedule' },
+  { id: 'settings', name: 'Settings', glyph: '⚙', tint: 'gray', subtitle: 'Personalize ORBIT' },
 ];
-const initialTasks: Task[] = [
-  { id: 1, title: 'Review the ORBIT product brief', meta: 'Today · Planning', done: false },
-  { id: 2, title: 'Map the first workspace flow', meta: 'Today · Product', done: false },
-  { id: 3, title: 'Collect interface references', meta: 'Tomorrow · Design', done: true },
-];
-const projects = [
-  { title: 'ORBIT', type: 'Personal workspace', progress: 32, color: 'violet' },
-  { title: 'Learning studio', type: 'Education', progress: 68, color: 'blue' },
-  { title: 'Career roadmap', type: 'Personal', progress: 15, color: 'green' },
-];
+const initialTasks = ['Review the ORBIT environment brief', 'Map the workspace flow', 'Collect interface references'];
+const initialNotes = ['ORBIT should feel like a space of its own.', 'Keep navigation simple and predictable.'];
+
+function AppIcon({ app, onClick, compact = false }: { app: OrbitApp; onClick: () => void; compact?: boolean }) {
+  return <button className={`desktop-app ${compact ? 'compact' : ''}`} onClick={onClick} aria-label={`Open ${app.name}`}>
+    <span className={`app-glyph ${app.tint}`}>{app.glyph}</span><span className="app-label">{app.name}</span>
+  </button>;
+}
 
 export default function Page() {
-  const [active, setActive] = useState<Section>('Home');
-  const [tasks, setTasks] = useState(initialTasks);
-  const [query, setQuery] = useState('');
-  const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState<string[]>([]);
-  const [notice, setNotice] = useState('');
-  const completed = tasks.filter(t => t.done).length;
-  const filtered = useMemo(() => projects.filter(p => p.title.toLowerCase().includes(query.toLowerCase())), [query]);
-  function addTask() {
-    const title = window.prompt('What would you like to add?');
-    if (title?.trim()) setTasks(old => [...old, { id: Date.now(), title: title.trim(), meta: 'Just added · Inbox', done: false }]);
-  }
-  function sendMessage() {
-    if (!message.trim()) return;
-    setMessages(old => [...old, message.trim()]); setMessage('');
-  }
-  return <main className="app-shell">
-    <aside className="sidebar">
-      <a className="brand" href="#home" onClick={() => setActive('Home')}><span className="brand-mark">O</span><span>ORBIT<small>PERSONAL WORKSPACE</small></span></a>
-      <div className="side-label">WORKSPACE</div>
-      <nav aria-label="Main navigation">{nav.map(item => <button key={item.name} className={`nav-item ${active === item.name ? 'selected' : ''}`} onClick={() => setActive(item.name)}><span className="nav-icon">{item.icon}</span>{item.name}{item.name === 'Assistant' && <span className="nav-dot" />}</button>)}</nav>
-      <div className="sidebar-bottom"><div className="plan-card"><span className="plan-icon">✦</span><div><b>Your space, your rules</b><p>Private by design. You stay in control.</p></div></div><button className="profile"><span className="avatar">SD</span><span><b>Swapnil Dalvi</b><small>Personal account</small></span><span className="more">···</span></button></div>
-    </aside>
-    <section className="main-area">
-      <header className="topbar"><div className="mobile-brand"><span className="brand-mark">O</span> ORBIT</div><div className="breadcrumb"><span>Workspace</span><span className="crumb-sep">/</span><b>{active}</b></div><div className="top-actions"><label className="searchbox"><span>⌕</span><input aria-label="Search workspace" placeholder="Search anything..." value={query} onChange={e => setQuery(e.target.value)} /><kbd>⌘ K</kbd></label><button className="icon-button" aria-label="Notifications" onClick={() => setNotice('You’re all caught up.')}>♧</button><button className="avatar small-avatar" aria-label="Account">SD</button></div></header>
-      <div className="content">
-        {notice && <div className="notice" role="status">{notice}<button onClick={() => setNotice('')} aria-label="Dismiss">×</button></div>}
-        {active === 'Home' && <>
-          <div className="welcome-row"><div><div className="eyebrow">MONDAY, SEPTEMBER 28</div><h1>Good morning, Swapnil <span>✦</span></h1><p className="subhead">A little clarity goes a long way. Here’s your space today.</p></div><button className="primary-button" onClick={addTask}>＋ <span>New task</span></button></div>
-          <div className="hero-card"><div className="hero-copy"><div className="hero-kicker"><span className="live-dot" /> YOUR DAY AT A GLANCE</div><h2>Make room for<br/>what matters.</h2><p>Small, intentional steps. Your projects and thoughts, all in one place.</p><button className="hero-link" onClick={() => setActive('Projects')}>Explore your workspace <span>→</span></button></div><div className="orbit-art" aria-hidden="true"><div className="orbit-ring ring-one"/><div className="orbit-ring ring-two"/><div className="orbit-ring ring-three"/><div className="orbit-core">O</div><span className="orbit-star star-a">✦</span><span className="orbit-star star-b">✧</span><span className="orbit-star star-c">·</span></div></div>
-          <div className="section-heading"><div><h2>Your focus</h2><p>Keep the next steps within reach.</p></div><button className="text-button" onClick={() => setActive('Projects')}>View projects <span>→</span></button></div>
-          <div className="focus-grid"><div className="panel task-panel"><div className="panel-head"><div><h3>Today’s tasks</h3><p>{completed} of {tasks.length} completed</p></div><button className="round-plus" onClick={addTask} aria-label="Add task">＋</button></div><div className="progress-track"><span style={{width: `${tasks.length ? completed / tasks.length * 100 : 0}%`}}/></div><div className="task-list">{tasks.map(task => <label className={`task-row ${task.done ? 'is-done' : ''}`} key={task.id}><input type="checkbox" checked={task.done} onChange={e => setTasks(old => old.map(t => t.id === task.id ? {...t, done: e.target.checked} : t))}/><span className="task-check"/><span className="task-text"><b>{task.title}</b><small>{task.meta}</small></span><span className="task-menu">···</span></label>)}</div><button className="panel-footer" onClick={() => setNotice('Task list is up to date.')}>See all tasks <span>→</span></button></div>
-          <div className="panel projects-panel"><div className="panel-head"><div><h3>In progress</h3><p>Your active projects</p></div><button className="more-link" onClick={() => setActive('Projects')}>All <span>→</span></button></div><div className="project-list">{projects.slice(0,3).map((p,i) => <button className="project-row" key={p.title} onClick={() => setActive('Projects')}><span className={`project-icon ${p.color}`}>{['◈','▧','✳'][i]}</span><span className="project-details"><b>{p.title}</b><small>{p.type}</small><span className="mini-track"><i style={{width:`${p.progress}%`}}/></span></span><span className="project-percent">{p.progress}%</span></button>)}</div><button className="panel-footer" onClick={() => setActive('Projects')}>Open project space <span>→</span></button></div></div>
-          <div className="bottom-grid"><div className="panel quick-panel"><div className="panel-head"><div><h3>Quick access</h3><p>Pick up where you left off</p></div></div><div className="quick-links"><button onClick={() => setActive('Assistant')}><span className="quick-icon lilac">✳</span><span><b>Ask ORBIT</b><small>Think something through</small></span><span className="arrow">↗</span></button><button onClick={() => setActive('Memory')}><span className="quick-icon peach">◷</span><span><b>Saved thoughts</b><small>Your notes and memory</small></span><span className="arrow">↗</span></button><button onClick={() => setActive('Library')}><span className="quick-icon mint">▤</span><span><b>Library</b><small>Files and references</small></span><span className="arrow">↗</span></button></div></div><div className="quote-card"><span className="quote-mark">“</span><p>Focus is not about doing more. It’s about making space for what matters.</p><span className="quote-credit">A NOTE TO SELF</span><div className="quote-spark">✧</div></div></div>
-        </>}
-        {active === 'Assistant' && <div className="page-view"><div className="eyebrow">YOUR THINKING PARTNER</div><h1>What’s on your mind?</h1><p className="subhead">Explore ideas, organize thoughts, or work through a problem. This demo keeps responses local.</p><div className="chat-box"><div className="assistant-welcome"><span className="assistant-symbol">✳</span><h2>Hi Swapnil, I’m ORBIT.</h2><p>Tell me what you’re working on. We can break it into clear next steps.</p><div className="suggestions"><button onClick={() => setMessage('Help me plan my day')}>Help me plan my day <span>↗</span></button><button onClick={() => setMessage('Turn an idea into a project')}>Turn an idea into a project <span>↗</span></button><button onClick={() => setMessage('Summarize my notes')}>Summarize my notes <span>↗</span></button></div></div>{messages.map((m,i)=><div className="user-message" key={i}>{m}</div>)}{messages.length>0 && <div className="demo-reply">I’ve captured that in this prototype. When AI is connected, ORBIT will help you work through it with your permission.</div>}<form className="chat-compose" onSubmit={e => {e.preventDefault();sendMessage();}}><input value={message} onChange={e=>setMessage(e.target.value)} placeholder="Ask or share something..." aria-label="Message ORBIT"/><button className="send-button" type="submit" aria-label="Send message">↑</button></form><div className="demo-note">Prototype mode · No message is sent to an AI service</div></div></div>}
-        {active === 'Projects' && <div className="page-view"><div className="eyebrow">YOUR WORK, ORGANIZED</div><div className="page-title-row"><div><h1>Projects</h1><p className="subhead">A home for the things you’re building.</p></div><button className="primary-button" onClick={() => setNotice('Project creation will be enabled in the next data milestone.')}>＋ New project</button></div><label className="wide-search"><span>⌕</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Find a project..."/></label><div className="project-cards">{filtered.map((p,i)=><article className="project-card" key={p.title}><div className={`project-icon large ${p.color}`}>{['◈','▧','✳'][projects.findIndex(x=>x.title===p.title)]}</div><span className="card-menu">···</span><h3>{p.title}</h3><p>{p.type}</p><div className="card-progress-label"><span>Progress</span><b>{p.progress}%</b></div><div className="progress-track"><span style={{width:`${p.progress}%`}}/></div><button className="panel-footer" onClick={()=>setNotice(`${p.title} selected. Project details are coming in the next milestone.`)}>Open project <span>→</span></button></article>)}</div>{filtered.length===0 && <div className="empty-state">No projects match “{query}”. Try another search.</div>}</div>}
-        {active === 'Memory' && <div className="page-view"><div className="eyebrow">YOUR CONTEXT, YOUR CONTROL</div><h1>Memory</h1><p className="subhead">Keep useful notes close. Nothing here is shared without your say-so.</p><div className="memory-callout"><span>◷</span><div><b>Personal memory is in preview</b><p>This area will hold notes you choose to save, with controls to edit or remove them.</p></div></div><div className="empty-state"><span className="empty-icon">✧</span><h3>A clear space for your thoughts</h3><p>Your saved notes and searchable memory will appear here.</p><button className="secondary-button" onClick={()=>setNotice('Note capture will be available in the next milestone.')}>＋ Create a note</button></div></div>}
-        {active === 'Library' && <div className="page-view"><div className="eyebrow">YOUR REFERENCE SHELF</div><h1>Library</h1><p className="subhead">Files, links, and resources gathered in one place.</p><div className="library-toolbar"><label className="wide-search"><span>⌕</span><input placeholder="Search your library..." aria-label="Search library"/></label><button className="secondary-button" onClick={()=>setNotice('File upload will be added after the first UI review.')}>＋ Add resource</button></div><div className="empty-state"><span className="empty-icon">▤</span><h3>Your library is ready when you are</h3><p>Upload or save resources to build a personal reference shelf.</p></div></div>}
-        {active === 'Settings' && <div className="page-view"><div className="eyebrow">MAKE ORBIT YOURS</div><h1>Settings</h1><p className="subhead">Manage your workspace preferences and privacy.</p><div className="settings-list"><section><h3>Appearance</h3><div className="setting-row"><div><b>Theme</b><small>Light-first interface preview</small></div><span className="setting-value">Light <span>⌄</span></span></div></section><section><h3>Privacy & control</h3><div className="setting-row"><div><b>Assistant permissions</b><small>Actions require your approval in this prototype</small></div><span className="status-pill">Approval-first</span></div><div className="setting-row"><div><b>Personal data</b><small>Memory and integrations are not connected yet</small></div><span className="status-pill muted">Not connected</span></div></section><section><h3>About</h3><div className="setting-row"><div><b>ORBIT workspace</b><small>Web prototype · Version 0.1</small></div><span className="setting-value">Details</span></div></section></div></div>}
+  const [opened, setOpened] = useState<AppId | null>(null);
+  const [startOpen, setStartOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [search, setSearch] = useState('');
+  const [tasks, setTasks] = useState(initialTasks.map((title, i) => ({ id: i + 1, title, done: i === 2 })));
+  const [notes, setNotes] = useState(initialNotes);
+  const [noteDraft, setNoteDraft] = useState('');
+  const [taskDraft, setTaskDraft] = useState('');
+  const [chatDraft, setChatDraft] = useState('');
+  const [chat, setChat] = useState<string[]>([]);
+  const filteredApps = useMemo(() => apps.filter(a => a.name.toLowerCase().includes(search.toLowerCase())), [search]);
+  const current = apps.find(a => a.id === opened);
+
+  function launch(id: AppId) { setOpened(id); setStartOpen(false); setSearchOpen(false); }
+  function addTask() { if (!taskDraft.trim()) return; setTasks(old => [...old, { id: Date.now(), title: taskDraft.trim(), done: false }]); setTaskDraft(''); }
+  function addNote() { if (!noteDraft.trim()) return; setNotes(old => [noteDraft.trim(), ...old]); setNoteDraft(''); }
+  function sendChat() { if (!chatDraft.trim()) return; setChat(old => [...old, chatDraft.trim()]); setChatDraft(''); }
+
+  return <main className="orbit-os">
+    <div className="wallpaper-glow glow-one" /><div className="wallpaper-glow glow-two" />
+    <header className="os-topline"><div className="os-brand"><span className="brand-orbit">O</span><span>ORBIT <small>PERSONAL ENVIRONMENT</small></span></div><div className="top-center">MONDAY, SEPTEMBER 28 <i>•</i> WORKSPACE</div><div className="system-tray"><span>◉</span><span>⌁</span><span>▮▮</span><span className="tray-time">10:53 AM</span></div></header>
+
+    <section className="desktop-area" aria-label="ORBIT desktop">
+      <div className="desktop-icons">
+        {apps.map(app => <AppIcon key={app.id} app={app} onClick={() => launch(app.id)} />)}
       </div>
-      <footer className="app-footer"><span>ORBIT <span className="footer-dot">·</span> A space to think clearly.</span><span>Private by design <span className="lock">◇</span></span></footer>
+      <div className="desktop-welcome"><div className="welcome-eyebrow">YOUR SPACE. YOUR RULES.</div><h1>Good to see you, Swapnil.</h1><p>A focused place for your work, ideas, and everyday tools.</p><button className="welcome-open" onClick={() => setStartOpen(true)}>Open app launcher <span>↗</span></button></div>
+      <div className="desktop-widget"><div className="widget-head"><span>YOUR DAY</span><span className="widget-date">MON · 28</span></div><div className="widget-clock">10:53<span> AM</span></div><p>Make a little room for what matters.</p><div className="widget-rule" /><div className="widget-foot"><span>{tasks.filter(t => t.done).length} of {tasks.length} tasks complete</span><button onClick={() => launch('projects')}>View tasks ↗</button></div></div>
+      <div className="desktop-hint">Double click an app to open <span>•</span> All your work stays inside ORBIT</div>
     </section>
-    <nav className="mobile-nav" aria-label="Mobile navigation">{nav.filter(n=>n.name!=='Settings').map(item=><button key={item.name} className={active===item.name?'active':''} onClick={()=>setActive(item.name)}><span>{item.icon}</span><small>{item.name}</small></button>)}<button className={active==='Settings'?'active':''} onClick={()=>setActive('Settings')}><span>•••</span><small>More</small></button></nav>
+
+    {opened && current && <div className="app-window" role="dialog" aria-label={current.name}>
+      <div className="window-titlebar"><div className="window-app-title"><span className={`window-mini-icon ${current.tint}`}>{current.glyph}</span>{current.name}</div><div className="window-controls"><button aria-label="Minimize window" onClick={() => setOpened(null)}>—</button><button aria-label="Close window" onClick={() => setOpened(null)}>×</button></div></div>
+      <div className="window-content">
+        {opened === 'files' && <><div className="module-heading"><div><small>ORBIT WORKSPACE</small><h2>Files</h2><p>Your saved materials, all in one place.</p></div><span className="module-chip">LOCAL DEMO</span></div><div className="file-toolbar"><button className="soft-button">＋ New folder</button><span>⌕ <input aria-label="Search files" placeholder="Search this space" /></span></div><div className="file-grid">{['Documents','Projects','Images','Shared with me'].map((name,i)=><button className="file-tile" key={name}><span className={`file-folder folder-${i}`}>▰</span><b>{name}</b><small>{['4 items','3 items','12 items','No items'][i]}</small></button>)}</div><div className="module-empty">Files and cloud connections will appear here when storage is connected.</div></>}
+        {opened === 'orbit-ai' && <><div className="module-heading"><div><small>PERSONAL ASSISTANT</small><h2>ORBIT AI</h2><p>Ask, plan, and think through your next step.</p></div><span className="module-chip">DEMO MODE</span></div><div className="chat-history"><div className="assistant-bubble"><b>✳ Hello, Swapnil.</b><p>I’m your ORBIT assistant preview. I can help organize a plan or explain how this environment works. Replies here are sample interactions, not connected to a live AI model.</p></div>{chat.map((m,i)=><div className="user-bubble" key={i}>{m}</div>)}</div><form className="composer" onSubmit={e=>{e.preventDefault();sendChat();}}><input value={chatDraft} onChange={e=>setChatDraft(e.target.value)} placeholder="Message ORBIT…" aria-label="Message ORBIT" /><button type="submit" disabled={!chatDraft.trim()}>↑</button></form></>}
+        {opened === 'projects' && <><div className="module-heading"><div><small>WORKSPACE</small><h2>Projects & tasks</h2><p>Keep your active work moving.</p></div><span className="module-chip">{tasks.length} TASKS</span></div><form className="inline-add" onSubmit={e=>{e.preventDefault();addTask();}}><input value={taskDraft} onChange={e=>setTaskDraft(e.target.value)} placeholder="Add a task…" aria-label="New task" /><button type="submit" disabled={!taskDraft.trim()}>Add task</button></form><div className="task-list">{tasks.map(task=><label className={`os-task ${task.done?'done':''}`} key={task.id}><input type="checkbox" checked={task.done} onChange={e=>setTasks(old=>old.map(t=>t.id===task.id?{...t,done:e.target.checked}:t))}/><span className="task-box" /><span>{task.title}</span></label>)}</div><div className="module-empty">Projects are currently sample workspace data. Persistent project storage is a later integration step.</div></>}
+        {opened === 'notes' && <><div className="module-heading"><div><small>PERSONAL SPACE</small><h2>Notes</h2><p>Capture a thought before it disappears.</p></div><span className="module-chip">PRIVATE BY DESIGN</span></div><form className="note-compose" onSubmit={e=>{e.preventDefault();addNote();}}><textarea value={noteDraft} onChange={e=>setNoteDraft(e.target.value)} placeholder="Write a quick note…" aria-label="Write a note" rows={3}/><button type="submit" disabled={!noteDraft.trim()}>Save note</button></form><div className="notes-list">{notes.map((note,i)=><article className="note-card" key={i}><span>▧</span><p>{note}</p><small>Saved in this preview</small></article>)}</div></>}
+        {opened === 'calendar' && <><div className="module-heading"><div><small>TIME & ROUTINE</small><h2>Calendar</h2><p>A simple view of what’s coming up.</p></div><span className="module-chip">SEPTEMBER 2026</span></div><div className="calendar-card"><div className="calendar-day"><strong>28</strong><span>MONDAY</span></div><div><b>Today</b><p>No events scheduled in this preview.</p></div></div><div className="module-empty">Calendar sync can be added later with explicit account permissions.</div></>}
+        {opened === 'settings' && <><div className="module-heading"><div><small>ENVIRONMENT</small><h2>Settings</h2><p>Control how your ORBIT space behaves.</p></div></div><div className="setting-cards"><div><b>Appearance</b><p>Bright workspace theme · System-aware layout</p><span>ACTIVE</span></div><div><b>Privacy & data</b><p>Preview data stays in the current page session.</p><span>LOCAL PREVIEW</span></div><div><b>Connections</b><p>No accounts or external services connected.</p><span>NOT CONNECTED</span></div></div></>}
+      </div>
+    </div>}
+
+    {startOpen && <div className="launcher-panel"><div className="launcher-search">⌕ <input autoFocus value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search apps and tools" aria-label="Search apps" /></div><div className="launcher-caption"><b>PINNED</b><span>All apps ↗</span></div><div className="launcher-grid">{filteredApps.map(app=><AppIcon key={app.id} app={app} compact onClick={()=>launch(app.id)} />)}</div><div className="launcher-bottom"><span className="profile-chip"><span className="profile-avatar">SD</span> Swapnil Dalvi</span><button onClick={()=>launch('settings')} aria-label="Settings">⚙</button></div></div>}
+
+    {searchOpen && <div className="quick-search"><label>Search ORBIT<input autoFocus value={search} onChange={e=>setSearch(e.target.value)} placeholder="Type an app name…" /></label><div>{filteredApps.map(app=><button key={app.id} onClick={()=>launch(app.id)}><span className={`window-mini-icon ${app.tint}`}>{app.glyph}</span>{app.name}<span>↵</span></button>)}</div></div>}
+
+    <nav className="os-taskbar" aria-label="ORBIT taskbar"><button className={`start-button ${startOpen?'pressed':''}`} onClick={()=>{setStartOpen(v=>!v);setSearchOpen(false);}} aria-label="Open app launcher"><span className="orbit-mark-small">O</span></button><button className="taskbar-search" onClick={()=>{setSearchOpen(v=>!v);setStartOpen(false);}}>⌕ <span>Search</span></button><div className="taskbar-pins">{apps.slice(0,5).map(app=><button key={app.id} className={`taskbar-pin ${opened===app.id?'running':''}`} onClick={()=>launch(app.id)} aria-label={app.name}><span className={`taskbar-glyph ${app.tint}`}>{app.glyph}</span></button>)}</div><div className="taskbar-tray"><span>⌃</span><span>◉</span><span className="taskbar-clock">10:53<br/><small>28/09/2026</small></span><button className="exit-button" onClick={()=>{setOpened(null);setStartOpen(false);setSearchOpen(false);}}>Exit ORBIT <span>↗</span></button></div></nav>
+    <div className="mobile-exit"><button onClick={()=>{setOpened(null);setStartOpen(false);setSearchOpen(false);}}>‹ <span>Exit ORBIT</span></button><span>ORBIT ENVIRONMENT</span><button onClick={()=>setStartOpen(v=>!v)} aria-label="Open app launcher">⊞</button></div>
   </main>;
 }
