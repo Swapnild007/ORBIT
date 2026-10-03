@@ -11,7 +11,7 @@
  *   /api/hexdb/image?hex=ICAO24                     — Aircraft photo proxy
  */
 
-const PORT = Number(process.env.EAGLE_EYE_PORT ?? 4000)
+const PORT = Number(process.env.PORT ?? process.env.EAGLE_EYE_PORT ?? 4000)
 
 // ─── AIS PROXY ──────────────────────────────────────────────────────────────
 
