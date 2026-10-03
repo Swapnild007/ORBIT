@@ -11,7 +11,7 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/api': process.env.EAGLE_EYE_API_URL || 'http://localhost:4000',
+      '/api': process.env.ORBIT_API_URL || 'http://localhost:4000',
     },
   },
   test: {
