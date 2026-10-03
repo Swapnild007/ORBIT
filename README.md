@@ -26,6 +26,6 @@ Render configuration is provided in `render.yaml`.
 
 Required backend secrets depend on the enabled data sources, including AIS and OpenSky credentials.
 
-## License
+## Attribution and license
 
-See the upstream ORBIT LICENSE.
+This repository contains code adapted from an upstream MIT-licensed open-source project. The original copyright and MIT license notice are retained in `LICENSE`.
