@@ -1,6 +1,6 @@
 import type { VesselRecord, VesselType } from '@/types'
 
-const PROXY_URL = 'ws://localhost:4000/ws/ais'
+const PROXY_URL = (import.meta.env.VITE_EAGLE_EYE_API_URL || 'http://localhost:4000').replace(/^http/, 'ws') + '/ws/ais'
 const THROTTLE_MS = 2000
 
 export function mapShipType(typeCode: number): VesselType {
