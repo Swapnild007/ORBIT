@@ -1,4 +1,4 @@
-const PROXY = (import.meta.env.VITE_EAGLE_EYE_API_URL || 'http://localhost:4000') + '/api/hexdb'
+const PROXY = (import.meta.env.VITE_ORBIT_API_URL || 'http://localhost:4000') + '/api/hexdb'
 
 export interface HexdbAircraft {
   ModeS: string
