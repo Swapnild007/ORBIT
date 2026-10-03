@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Start unified backend server
-echo "[dev] Starting Eagle Eye backend on :4000..."
+echo "[dev] Starting ORBIT backend on :4000..."
 bun run server/index.ts &
 BACKEND_PID=$!
 
