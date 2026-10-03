@@ -1,0 +1,22 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","properties":{"name":"Zaporizhzhia NPP","country":"Ukraine","capacity":"6000 MW","reactors":6,"status":"occupied"},"geometry":{"type":"Point","coordinates":[34.59,47.51]}},
+{"type":"Feature","properties":{"name":"Chernobyl (decommissioned)","country":"Ukraine","capacity":"0 MW","reactors":0,"status":"decommissioned"},"geometry":{"type":"Point","coordinates":[30.1,51.39]}},
+{"type":"Feature","properties":{"name":"Bushehr NPP","country":"Iran","capacity":"1000 MW","reactors":1,"status":"active"},"geometry":{"type":"Point","coordinates":[50.89,28.83]}},
+{"type":"Feature","properties":{"name":"Natanz Enrichment","country":"Iran","capacity":"N/A","reactors":0,"status":"enrichment"},"geometry":{"type":"Point","coordinates":[51.73,33.72]}},
+{"type":"Feature","properties":{"name":"Fordow Enrichment","country":"Iran","capacity":"N/A","reactors":0,"status":"enrichment"},"geometry":{"type":"Point","coordinates":[51.57,34.88]}},
+{"type":"Feature","properties":{"name":"Dimona (Negev Research)","country":"Israel","capacity":"N/A","reactors":1,"status":"research"},"geometry":{"type":"Point","coordinates":[35.15,31.0]}},
+{"type":"Feature","properties":{"name":"Yongbyon Complex","country":"North Korea","capacity":"N/A","reactors":1,"status":"active"},"geometry":{"type":"Point","coordinates":[125.75,39.8]}},
+{"type":"Feature","properties":{"name":"Barakah NPP","country":"UAE","capacity":"5600 MW","reactors":4,"status":"active"},"geometry":{"type":"Point","coordinates":[52.26,23.96]}},
+{"type":"Feature","properties":{"name":"Kudankulam NPP","country":"India","capacity":"2000 MW","reactors":2,"status":"active"},"geometry":{"type":"Point","coordinates":[77.71,8.17]}},
+{"type":"Feature","properties":{"name":"Fukushima Daiichi","country":"Japan","capacity":"0 MW","reactors":0,"status":"decommissioning"},"geometry":{"type":"Point","coordinates":[141.03,37.42]}},
+{"type":"Feature","properties":{"name":"Hinkley Point C","country":"UK","capacity":"3260 MW","reactors":2,"status":"construction"},"geometry":{"type":"Point","coordinates":[-3.13,51.21]}},
+{"type":"Feature","properties":{"name":"Flamanville EPR","country":"France","capacity":"1650 MW","reactors":1,"status":"construction"},"geometry":{"type":"Point","coordinates":[-1.88,49.54]}},
+{"type":"Feature","properties":{"name":"Akkuyu NPP","country":"Turkey","capacity":"4800 MW","reactors":4,"status":"construction"},"geometry":{"type":"Point","coordinates":[33.53,36.14]}},
+{"type":"Feature","properties":{"name":"Rooppur NPP","country":"Bangladesh","capacity":"2400 MW","reactors":2,"status":"construction"},"geometry":{"type":"Point","coordinates":[89.05,24.07]}},
+{"type":"Feature","properties":{"name":"Palo Verde","country":"USA","capacity":"3937 MW","reactors":3,"status":"active"},"geometry":{"type":"Point","coordinates":[-112.86,33.39]}},
+{"type":"Feature","properties":{"name":"Bruce Power","country":"Canada","capacity":"6234 MW","reactors":8,"status":"active"},"geometry":{"type":"Point","coordinates":[-81.6,44.33]}},
+{"type":"Feature","properties":{"name":"Taishan NPP","country":"China","capacity":"3460 MW","reactors":2,"status":"active"},"geometry":{"type":"Point","coordinates":[112.99,21.92]}},
+{"type":"Feature","properties":{"name":"Leningrad NPP","country":"Russia","capacity":"4400 MW","reactors":4,"status":"active"},"geometry":{"type":"Point","coordinates":[29.04,59.85]}},
+{"type":"Feature","properties":{"name":"Kori (Shin-Kori)","country":"South Korea","capacity":"5600 MW","reactors":4,"status":"active"},"geometry":{"type":"Point","coordinates":[129.35,35.32]}},
+{"type":"Feature","properties":{"name":"Pelindaba Research","country":"South Africa","capacity":"N/A","reactors":1,"status":"research"},"geometry":{"type":"Point","coordinates":[27.93,-25.78]}}
+]}
