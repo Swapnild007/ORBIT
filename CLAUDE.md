@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Eagle Eye is a geospatial intelligence dashboard — a single-page React app featuring an interactive 3D globe (Three.js), entity tracking panels, and a live activity feed. It is a front-end-only project with no backend; all data is static/mock.
+ORBIT is a geospatial intelligence dashboard — a single-page React app featuring an interactive 3D globe (Three.js), entity tracking panels, and a live activity feed. It is a front-end-only project with no backend; all data is static/mock.
 
 ## Commands
 
