@@ -1,177 +1,56 @@
-name: Bootstrap Eagle Eye
+name: Eagle Eye Android
 
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  actions: write
 
 jobs:
-  bootstrap:
-    if: github.actor != 'github-actions[bot]'
+  android:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout ORBIT
+      - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          fetch-depth: 1
+          node-version: 22
+          cache: npm
 
-      - name: Replace repository with Eagle Eye
-        shell: bash
-        run: |
-          set -euo pipefail
-          git clone --depth 1 https://github.com/Ryan-Milton/Eagle-Eye.git /tmp/eagle-eye
-          rm -rf ./*
-          rm -rf ./.??* 2>/dev/null || true
-          cp -a /tmp/eagle-eye/. .
-          rm -rf .git
-          git init
-          git checkout -b main
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
 
-      - name: Configure Android client and remote backend
-        shell: bash
-        run: |
-          set -euo pipefail
-          node <<'NODE'
-          const fs = require('fs');
-          const pkg = JSON.parse(fs.readFileSync('package.json','utf8'));
-          pkg.scripts = {
-            ...pkg.scripts,
-            "android:add": "npx cap add android",
-            "android:sync": "npm run build && npx cap sync android",
-            "android:open": "npx cap open android"
-          };
-          pkg.dependencies = {
-            ...pkg.dependencies,
-            "@capacitor/core": "^7.4.4"
-          };
-          pkg.devDependencies = {
-            ...pkg.devDependencies,
-            "@capacitor/cli": "^7.4.4"
-          };
-          fs.writeFileSync('package.json', JSON.stringify(pkg,null,2)+'\\n');
-          NODE
+      - name: Install dependencies
+        run: npm install
 
-          cat > capacitor.config.ts <<'EOF'
-          import type { CapacitorConfig } from '@capacitor/cli'
+      - name: Add Android platform
+        run: npx cap add android
 
-          const config: CapacitorConfig = {
-            appId: 'com.swapnild007.eagleeye',
-            appName: 'Eagle Eye',
-            webDir: 'dist',
-            android: {
-              backgroundColor: '#05070a'
-            }
-          }
-
-          export default config
-          EOF
-
-          cat > render.yaml <<'EOF'
-          services:
-            - type: web
-              name: eagle-eye-backend
-              runtime: bun
-              plan: free
-              buildCommand: bun install --frozen-lockfile
-              startCommand: bun server/index.ts
-              healthCheckPath: /health
-              envVars:
-                - key: NODE_ENV
-                  value: production
-                - key: PORT
-                  value: "10000"
-                - key: AIS_API_KEY
-                  sync: false
-                - key: OPENSKY_CLIENT_ID
-                  sync: false
-                - key: OPENSKY_CLIENT_SECRET
-                  sync: false
-                - key: FLIGHT_SOURCE
-                  value: opensky
-          EOF
-
-          cat > .env.example <<'EOF'
-          VITE_EAGLE_EYE_API_URL=https://YOUR-EAGLE-EYE-BACKEND.example.com
-          EOF
-
-      - name: Install dependencies and Android tooling
-        run: |
-          npm install
-          npm install @capacitor/android@^7.4.4
-          npx cap add android
-
-      - name: Configure remote API endpoints
-        shell: bash
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          replacements = {
-            "src/lib/ais-client.ts": ("ws://localhost:4000/ws/ais", "getWsUrl('/ws/ais')"),
-            "src/lib/flight-client.ts": ("ws://localhost:4000/ws/flights", "getWsUrl('/ws/flights')"),
-            "src/lib/hexdb.ts": ("http://localhost:4000/api/hexdb", "getApiUrl('/api/hexdb')"),
-          }
-          for path, (old, new) in replacements.items():
-            p=Path(path)
-            s=p.read_text()
-            if old in s:
-              s=s.replace(old,new)
-              if path.endswith('ais-client.ts') or path.endswith('flight-client.ts') or path.endswith('hexdb.ts'):
-                s="import { getApiUrl, getWsUrl } from '@/lib/remote-api'\\n"+s
-              p.write_text(s)
-          PY
-
-          cat > src/lib/remote-api.ts <<'EOF'
-          const API_BASE = (import.meta.env.VITE_EAGLE_EYE_API_URL || '').replace(/\\/$/, '')
-
-          export function getApiUrl(path: string): string {
-            return API_BASE ? `${API_BASE}${path}` : path
-          }
-
-          export function getWsUrl(path: string): string {
-            if (!API_BASE) {
-              const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-              return `${protocol}//${window.location.host}${path}`
-            }
-            return API_BASE.replace(/^http:/, 'ws:').replace(/^https:/, 'wss:') + path
-          }
-          EOF
-
-          python3 - <<'PY'
-          from pathlib import Path
-          for p in Path('src').rglob('*.ts'):
-            s=p.read_text()
-            if "fetch('/api/" in s:
-              s="import { getApiUrl } from '@/lib/remote-api'\\n"+s if not "remote-api" in s else s
-              import re
-              s=re.sub(r"fetch\\('/api/([^']+)'", r"fetch(getApiUrl('/api/\\1')", s)
-              p.write_text(s)
-          for p in Path('src').rglob('*.tsx'):
-            s=p.read_text()
-            if "fetch('/api/" in s:
-              s="import { getApiUrl } from '@/lib/remote-api'\\n"+s if not "remote-api" in s else s
-              import re
-              s=re.sub(r"fetch\\('/api/([^']+)'", r"fetch(getApiUrl('/api/\\1')", s)
-              p.write_text(s)
-          PY
-
-      - name: Build and verify
-        run: |
-          npm run build
-          npx cap sync android
-          cd android
-          ./gradlew assembleDebug
-
-      - name: Commit Eagle Eye rebuild
-        shell: bash
+      - name: Build web client
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "feat: rebuild ORBIT as Eagle Eye Android project" || exit 0
-          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git push --force origin main
+          VITE_EAGLE_EYE_API_URL: ${{ secrets.EAGLE_EYE_API_URL }}
+        run: npm run build
+
+      - name: Sync Capacitor
+        env:
+          VITE_EAGLE_EYE_API_URL: ${{ secrets.EAGLE_EYE_API_URL }}
+        run: npx cap sync android
+
+      - name: Build debug APK
+        working-directory: android
+        run: ./gradlew assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: eagle-eye-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
