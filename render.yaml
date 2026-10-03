@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: eagle-eye-backend
+    runtime: bun
+    plan: free
+    buildCommand: bun install --frozen-lockfile
+    startCommand: bun server/index.ts
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "10000"
+      - key: AIS_API_KEY
+        sync: false
+      - key: OPENSKY_CLIENT_ID
+        sync: false
+      - key: OPENSKY_CLIENT_SECRET
+        sync: false
+      - key: FLIGHT_SOURCE
+        value: opensky
