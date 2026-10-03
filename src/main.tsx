@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App'
 
-const apiBase = (import.meta.env.VITE_EAGLE_EYE_API_URL || '').replace(/\/$/, '')
+const apiBase = (import.meta.env.VITE_ORBIT_API_URL || '').replace(/\/$/, '')
 if (apiBase) {
   const nativeFetch = window.fetch.bind(window)
   window.fetch = (input, init) => {
