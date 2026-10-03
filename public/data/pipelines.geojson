@@ -1,0 +1,13 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","properties":{"name":"Nord Stream 1 (damaged)","type":"gas","status":"damaged","year":2011},"geometry":{"type":"LineString","coordinates":[[30,59.9],[28,59.5],[24,58],[20,56],[18,55.5],[14,55],[12.5,55]]}},
+{"type":"Feature","properties":{"name":"Nord Stream 2 (damaged)","type":"gas","status":"damaged","year":2021},"geometry":{"type":"LineString","coordinates":[[30.1,59.8],[28.2,59.3],[24.2,57.8],[20.2,55.8],[18.2,55.3],[14.2,54.8],[12.7,54.8]]}},
+{"type":"Feature","properties":{"name":"TurkStream","type":"gas","status":"active","year":2020},"geometry":{"type":"LineString","coordinates":[[38.8,44.6],[36,43],[33,42.5],[30,42],[29,41.5],[28.5,41.2]]}},
+{"type":"Feature","properties":{"name":"TanAP (Trans-Anatolian)","type":"gas","status":"active","year":2018},"geometry":{"type":"LineString","coordinates":[[50,40],[48,40.5],[46,40],[44,39.5],[42,39],[40,39],[38,39],[36,39],[34,39.5],[32,40],[30,40.5],[28,40.5],[26.7,40.6]]}},
+{"type":"Feature","properties":{"name":"TAP (Trans-Adriatic)","type":"gas","status":"active","year":2020},"geometry":{"type":"LineString","coordinates":[[26.7,40.6],[24,40.5],[21,40],[20,40.5],[18.5,40.8],[17,41]]}},
+{"type":"Feature","properties":{"name":"Druzhba Pipeline","type":"oil","status":"active","year":1964},"geometry":{"type":"LineString","coordinates":[[50,54],[45,53],[40,52],[35,52],[30,51.5],[25,51],[22,50],[18,48],[15,50],[12,51]]}},
+{"type":"Feature","properties":{"name":"BTC Pipeline","type":"oil","status":"active","year":2006},"geometry":{"type":"LineString","coordinates":[[50,40],[48,40.5],[46,41],[44,41],[42,41],[40,40],[38.5,39.5],[36.5,37]]}},
+{"type":"Feature","properties":{"name":"East-West Pipeline (Saudi)","type":"oil","status":"active","year":1981},"geometry":{"type":"LineString","coordinates":[[50,26],[49,25.5],[47,25],[45,24.5],[43,24],[41,23],[39.5,22],[38,21.5]]}},
+{"type":"Feature","properties":{"name":"Keystone XL (partial)","type":"oil","status":"active","year":2010},"geometry":{"type":"LineString","coordinates":[[-97,49],[-97,46],[-97,43],[-96.5,40],[-96,37],[-95,34],[-94.5,31],[-95,29.5]]}},
+{"type":"Feature","properties":{"name":"Power of Siberia","type":"gas","status":"active","year":2019},"geometry":{"type":"LineString","coordinates":[[130,51],[128,50],[125,49],[120,48],[115,46],[110,44],[105,42],[100,40]]}},
+{"type":"Feature","properties":{"name":"ESPO Pipeline","type":"oil","status":"active","year":2009},"geometry":{"type":"LineString","coordinates":[[80,56],[90,55],[100,54],[110,52],[120,50],[128,48],[132,47],[133,43]]}}
+]}
