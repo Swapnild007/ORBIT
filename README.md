@@ -1,6 +1,6 @@
-# Eagle Eye
+# ORBIT
 
-Standalone Android client and remote intelligence backend based on Ryan-Milton/Eagle-Eye.
+Standalone Android client and remote intelligence backend.
 
 ## Architecture
 
@@ -8,7 +8,7 @@ Standalone Android client and remote intelligence backend based on Ryan-Milton/E
 - Backend: Bun, deployed separately from SAARTHI
 - Backend hosting target: Render
 - Android does not run Bun, Docker, a database, or a local backend.
-- Production API is supplied through `VITE_EAGLE_EYE_API_URL`.
+- Production API is supplied through `VITE_ORBIT_API_URL`.
 
 ## Android build
 
@@ -28,4 +28,4 @@ Required backend secrets depend on the enabled data sources, including AIS and O
 
 ## License
 
-See the upstream Eagle Eye LICENSE.
+See the upstream ORBIT LICENSE.
