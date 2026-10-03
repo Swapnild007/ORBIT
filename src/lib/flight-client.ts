@@ -1,6 +1,6 @@
 import type { FlightRecord, FlightType } from '@/types'
 
-const PROXY_URL = (import.meta.env.VITE_EAGLE_EYE_API_URL || 'http://localhost:4000').replace(/^http/, 'ws') + '/ws/flights'
+const PROXY_URL = (import.meta.env.VITE_ORBIT_API_URL || 'http://localhost:4000').replace(/^http/, 'ws') + '/ws/flights'
 const THROTTLE_MS = 2000
 
 export class FlightClient {
