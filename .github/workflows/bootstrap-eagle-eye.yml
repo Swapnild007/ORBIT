@@ -117,6 +117,8 @@ jobs:
             s=p.read_text()
             if old in s:
               s=s.replace(old,new)
+              if path.endswith('ais-client.ts') or path.endswith('flight-client.ts') or path.endswith('hexdb.ts'):
+                s="import { getApiUrl, getWsUrl } from '@/lib/remote-api'\\n"+s
               p.write_text(s)
           PY
 
